@@ -1,5 +1,14 @@
 <template>
   <div class="container">
+    <!-- <router-view /> -->
+    <div v-if="!user">
+      <div class="alert alert-info" role="alert">
+        <h6>
+          Please
+          <a href="login">login</a> to access all features
+        </h6>
+      </div>
+    </div>
     <div>
       <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
@@ -39,7 +48,7 @@
         </a>
       </div>
     </div>
-    <div :hidden="!specific">
+    <div :hidden="user && !specific">
       <div class="row">
         <div class="col-lg-2">
           <div class="input-group">
@@ -96,9 +105,19 @@
           :key="data.id"
           @click="showdata(data)"
           scope="row"
-          style="cursor:pointer;"
+          :style="specific? '': 'cursor:pointer;'"
         >
-          <td v-for="val in data" :key="val.id">{{val}}</td>
+          <td v-for="(val, id) in data" :key="val.id">
+            <span v-if="id === 'change_percent' && val > 0">
+              {{val}}
+              <img align="right" src="up.png" />
+            </span>
+            <span v-else-if="id == 'change_percent'">
+              {{val}}
+              <img align="right" src="down.png" />
+            </span>
+            <span v-else>{{val}}</span>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -109,6 +128,7 @@
 import axios from "axios";
 
 export default {
+  props: ["user"],
   data() {
     return {
       headers: [],
@@ -124,7 +144,7 @@ export default {
         axios
           .get(url)
           .then(response => {
-            console.log(response);
+            // console.log(response);
             // alert('Success');
             this.headers = response.data.keys;
             this.datas = response.data.data;
@@ -140,24 +160,35 @@ export default {
       //   console.log(data);
       var url = "./api/data/" + data.symbol.toLowerCase() + ".csv";
       this.getdata(url, data.symbol);
-      this.specific = data;
+      this.specific = true;
       return;
     },
     buy: function() {
       alert("buying " + this.quantity.toString());
-      axios
-        .put("./api/buy", {
-          stock: this.specific.symbol,
-          quantity: this.quantity,
-          price: 10
-        });
+      axios.put("./api/buy", {
+        stock: this.specific.symbol,
+        quantity: this.quantity,
+        price: 10,
+        user: this.user
+      });
     }
   },
   mounted() {
-    // console.log("Dashboard Component mounted.");
-    var url = "./api/data/nifty.csv";
-    this.specific = null;
-    this.getdata(url, "NIFTY50");
+    console.log("Dashboard Component mounted.", this.$router.params);
+    console.log("user = ", this.user);
+    if (
+      typeof this.$router.params !== "undefined" &&
+      typeof this.$route.params.name !== "undefined"
+    ) {
+      var filename = this.$router.params.name;
+      var url = "./api/data/" + filename + ".csv";
+      this.getdata(url, filename);
+      this.specific = true;
+    } else {
+      var url = "./api/data/nifty.csv";
+      this.specific = null;
+      this.getdata(url, "NIFTY50");
+    }
   }
 };
 </script>

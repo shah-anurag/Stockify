@@ -38,6 +38,7 @@ Route::get('/data/{fname}', function(Request $request, $fname) {
     return json_encode(array('keys' => $key, 'data' => $json));
 
 });
+
 Route::group(['middleware' => 'web'], function () {
     Route::group(['prefix'=>'admin',  'middleware' => 'admin'], function(){
         Route::match(['put', 'patch'], '/buy','HomeController@update');

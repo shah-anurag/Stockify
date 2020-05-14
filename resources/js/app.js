@@ -20,7 +20,35 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('dashboard-component', require('./components/Dashboard.vue').default);
+
+import DashboardComponent from './components/Dashboard.vue'
+import ProfileComponent from './components/Profile.vue'
+
+Vue.component('dashboard-component', () => import('./components/Dashboard.vue'));
+Vue.component('profile-component', () => import('./components/Profile.vue'));
+
+import VueRouter from 'vue-router'
+
+Vue.use(VueRouter)
+
+const User = {
+    template: '<div>User</div>'
+}
+  
+  
+
+const routes = [
+    {
+        path: '/:name',
+        name: 'data',
+        component: require('./components/Dashboard.vue'),
+    },
+]
+const router = new VueRouter({
+    routes
+})
+
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -28,5 +56,5 @@ Vue.component('dashboard-component', require('./components/Dashboard.vue').defau
  */
 
 const app = new Vue({
-    el: '#app',
-});
+    router,
+}).$mount('#app');

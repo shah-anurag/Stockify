@@ -3,7 +3,8 @@
 @section('content')
 <div class="container-fluid">
     <div class="row justify-content-center">
-        <dashboard-component class="col-md-12" user="{{Auth::id()}}"></dashboard-component>
+        <?php //echo $user?>
+        <profile-component user="{{$user}}"></profile-component>
     </div>
 </div>
 @endsection
