@@ -49,10 +49,10 @@
       </div>
     </div>
     <div :hidden="user && !specific">
-      <div class="row">
-        <div class="col-lg-2">
+      <div class="row" style="margin-bottom:5px;">
+        <div class="col-lg-6">
           <div class="input-group">
-            <h5>Quantity:</h5>
+            <h5 style="padding-right:10px;">Quantity:</h5>
             <span class="input-group-btn">
               <button
                 type="button"
@@ -88,9 +88,25 @@
             </span>
           </div>
         </div>
-        <div class="col-lg-2">
-          <button type="button" class="btn btn-primary" :disabled="quantity==0" @click="buy()">Buy</button>
+        <div class="col-lg-6">
+          <button type="button" class="btn btn-primary" style="width:100%" :disabled="quantity==0" @click="buy()">Buy</button>
         </div>
+      </div>
+      <div class="row">
+        <div class="loader">
+          <img :hidden="load!==true" src="/loader.gif" />
+        </div>
+        <div class="alert alert-success" role="alert" v-if="status === 200">Successfully Bought!</div>
+        <div
+          class="alert alert-danger"
+          role="alert"
+          v-if="status === 500"
+        >Some Error occured! Please try again after reloading the page.</div>
+        <div
+          class="alert alert-warning"
+          role="alert"
+          v-if="status === 401"
+        >You have insufficient balance!</div>
       </div>
     </div>
     <table class="table table-hover table-bordered">
@@ -135,7 +151,9 @@ export default {
       datas: [],
       tablename: "",
       quantity: 0,
-      specific: null
+      specific: null,
+      status: null,
+      load: false,
     };
   },
   methods: {
@@ -165,25 +183,32 @@ export default {
     },
     buy: function() {
       // alert("buying " + this.quantity.toString());
+      this.load = true;
       let config = {
         headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+          "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
           // 'Access-Control-Allow-Origin': '*',
         }
       };
-      axios.patch("./api/buy", {
-        quantity: this.quantity,
-        price: 10,
-        id: this.user,
-        stockname: this.tablename,
-      }, config).then(response => {
-        console.log(response);
-        if (response.status === 200) {
-          
-        }
-        else {
-        }
-      });
+      axios
+        .patch(
+          "./api/buy",
+          {
+            quantity: this.quantity,
+            price: 10,
+            id: this.user,
+            stockname: this.tablename
+          },
+          config
+        )
+        .then(response => {
+          console.log(response);
+          this.load = false;
+          this.status = response.status;
+        }).catch(error => {
+          this.load = false;
+          this.status = 500;
+        });
     }
   },
   mounted() {
@@ -195,3 +220,21 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.alert {
+  width: 100%;
+  margin: 10px 15px;
+}
+
+.loader {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+input {
+  text-align: center;
+}
+</style>
