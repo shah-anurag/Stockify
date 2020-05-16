@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <!-- <router-view /> -->
     <div v-if="!user">
       <div class="alert alert-info" role="alert">
         <h6>
@@ -121,6 +120,7 @@
         </tr>
       </tbody>
     </table>
+    <h1 v-bind="this.$route">{{this.$route}}</h1>
   </div>
 </template>
 
@@ -128,7 +128,7 @@
 import axios from "axios";
 
 export default {
-  props: ["user", "token"],
+  props: ["user"],
   data() {
     return {
       headers: [],
@@ -157,34 +157,46 @@ export default {
       }
     },
     showdata: function(data) {
+
       //   console.log(data);
-      var url = "./api/data/" + data.symbol.toLowerCase() + ".csv";
-      this.getdata(url, data.symbol);
-      this.specific = true;
+      // var url = "./api/data/" + data.symbol.toLowerCase() + ".csv";
+      console.log(this.$router);
+      this.$router.push({ name: 'company', params: { name:  data.symbol.toLowerCase()}});
+      // this.getdata(url, data.symbol);
+      // this.specific = true;
       return;
     },
     buy: function() {
       alert("buying " + this.quantity.toString());
-      let config = {
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-          // 'Access-Control-Allow-Origin': '*',
-        }
-      };
-      axios.patch("./api/buy", {
+      axios.put("./api/buy", {
+        stock: this.specific.symbol,
         quantity: this.quantity,
         price: 10,
-        id: this.user,
-        stockname: this.tablename,
-      }, config);
+        user: this.user
+      });
+    }
+  },
+  watch: {
+    $route(to, from) {
+      console.log('to: ', to);
+      console.log('from: ', from);
+
+      // react to route changes...
+      // var filename = this.$router.params.name.toLowerCase();
+      // var url = "./api/data/" + filename + ".csv";
+      // this.getdata(url, filename);
+      // this.specific = true;
     }
   },
   mounted() {
-    console.log("Dashboard Component mounted.");
-    console.log("user = ", this.user, this.token);
-    var url = "./api/data/nifty.csv";
-    this.specific = null;
-    this.getdata(url, "NIFTY50");
+    console.log("Dashboard Component mounted.", this.$router.params);
+    console.log("user = ", this.user);
+    var filename = 'nifty';
+    if(this.$router.params) {
+      filename = this.$router.params.name;
+    }
+    var url = "./api/data/" + filename + ".csv";
+    this.getdata(url, filename);
   }
 };
 </script>

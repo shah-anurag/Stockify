@@ -14,13 +14,14 @@ class CreateStockSellPricesTable extends Migration
     public function up()
     {
         Schema::create('stock_sell_prices', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('s_id');
             $table->decimal('sell_price', 20, 4);
             $table->dateTime('sell_date');
         });
 
         Schema::table('stock_sell_prices', function($table) {
-            $table->primary(['s_id', 'sell_date']);
+            // $table->primary(['s_id', 'sell_date']);
             $table->foreign('s_id')->references('id')->on('stocks')->onDelete('cascade');
         });
     }

@@ -14,6 +14,7 @@ class CreateStockPurchasesTable extends Migration
     public function up()
     {
         Schema::create('stock_purchases', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('u_id');
             $table->unsignedBigInteger('s_id');
             $table->dateTime('purchase_date');
@@ -21,7 +22,7 @@ class CreateStockPurchasesTable extends Migration
         });
         
         Schema::table('stock_purchases', function($table) {
-            $table->primary(['u_id', 's_id', 'purchase_date']);
+            // $table->primary(['u_id', 's_id', 'purchase_date']);
             $table->foreign('u_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('s_id')->references('id')->on('stocks')->onDelete('cascade');
         });

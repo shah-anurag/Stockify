@@ -14,16 +14,18 @@ use Barryvdh\Debugbar\Facade as Debugbar;
 |
 */
 
+// Route::get('/{any}', 'SinglePageController@index')->where('any', '.*');
+
 Route::get('/', 'HomeController@index');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::group(array('domain' => 'http://localhost:8000/'), function()
-{
-   Debugbar::disable();
-});
+// Route::group(array('domain' => 'http://localhost:8000/'), function()
+// {
+//    Debugbar::disable();
+// });
 
 Route::get('profile', ['middleware' => 'auth', function()
 {
@@ -35,6 +37,3 @@ Route::get('profile', ['middleware' => 'auth', function()
    return view('profile', ['user' => $user]);
 
 }])->name('profile');
-
-// Route::get('/{any}', 'SinglePageController@index')->where('any', '.*');
-

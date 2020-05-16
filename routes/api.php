@@ -39,8 +39,8 @@ Route::get('/data/{fname}', function(Request $request, $fname) {
 
 });
 
-Route::group(['middleware' => 'web'], function () {
-    Route::group(['prefix'=>'admin',  'middleware' => 'admin'], function(){
-        Route::match(['put', 'patch'], '/buy','HomeController@update');
-    });
-});
+// Route::group(['middleware' => 'web'], function () {
+    // Route::group(['prefix'=>'admin',  'middleware' => 'admin'], function(){
+Route::match(['put', 'patch'], '/buy','HomeController@update');//->middleware('web');
+    // });
+// });

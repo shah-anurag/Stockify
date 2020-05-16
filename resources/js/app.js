@@ -26,26 +26,25 @@ import ProfileComponent from './components/Profile.vue'
 
 Vue.component('dashboard-component', () => import('./components/Dashboard.vue'));
 Vue.component('profile-component', () => import('./components/Profile.vue'));
+Vue.component('company-component', () => import('./components/Company.vue'));
 
 import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-const User = {
-    template: '<div>User</div>'
-}
-  
-  
-
 const routes = [
     {
+        path: '/', redirect: '/nifty'
+    },
+    {
         path: '/:name',
-        name: 'data',
-        component: require('./components/Dashboard.vue'),
+        name: 'company',
+        component: require('./components/Company.vue'),
     },
 ]
 const router = new VueRouter({
-    routes
+    routes,
+    mode: 'history',
 })
 
 
@@ -56,5 +55,5 @@ const router = new VueRouter({
  */
 
 const app = new Vue({
-    router,
+    // router,
 }).$mount('#app');
