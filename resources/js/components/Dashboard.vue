@@ -164,7 +164,7 @@ export default {
       return;
     },
     buy: function() {
-      alert("buying " + this.quantity.toString());
+      // alert("buying " + this.quantity.toString());
       let config = {
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
@@ -176,7 +176,14 @@ export default {
         price: 10,
         id: this.user,
         stockname: this.tablename,
-      }, config);
+      }, config).then(response => {
+        console.log(response);
+        if (response.status === 200) {
+          
+        }
+        else {
+        }
+      });
     }
   },
   mounted() {

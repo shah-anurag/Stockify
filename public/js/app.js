@@ -2289,7 +2289,7 @@ __webpack_require__.r(__webpack_exports__);
       return;
     },
     buy: function buy() {
-      alert("buying " + this.quantity.toString());
+      // alert("buying " + this.quantity.toString());
       var config = {
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // 'Access-Control-Allow-Origin': '*',
@@ -2301,7 +2301,11 @@ __webpack_require__.r(__webpack_exports__);
         price: 10,
         id: this.user,
         stockname: this.tablename
-      }, config);
+      }, config).then(function (response) {
+        console.log(response);
+
+        if (response.status === 200) {} else {}
+      });
     }
   },
   mounted: function mounted() {

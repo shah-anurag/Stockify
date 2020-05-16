@@ -42,6 +42,8 @@ class HomeController extends Controller
         Debugbar::info((float)$user->money);
         $moneyInAccount = (float)$user->money;
         $moneyRequired = (float)$data['price'] * (float)$data['quantity'];
+        $date = date('Y-m-d H:i:s');
+        Debugbar::info('date', $date);
         if($moneyInAccount >= $moneyRequired) {
             $moneyInAccount = $moneyInAccount - $moneyRequired;
             $user->money = (string)$moneyInAccount;
@@ -55,12 +57,14 @@ class HomeController extends Controller
             $stock_purchase = \App\stockPurchase::Create([
                 'u_id' => $user->id,
                 's_id' => $stock->id,
-                'purchase_date' => date(),
+                'purchase_date' => $date,
                 'quantity' => $data['quantity']
             ]);
 
             $stock_purchase_price = \App\stockPurchasePrice::Create([
-                ''
+                's_id' => $stock->id,
+                'purchasing_price' => $data['price'],
+                'purchase_date' => $date
             ]);
         }
     }
