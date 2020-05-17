@@ -32,7 +32,7 @@ Route::get('profile', ['middleware' => 'auth', function()
    // Only authenticated users may enter...
    $user = Auth::user();
    unset($user->email_verified_at);
-   unset($user->id);
+   // unset($user->id);
    // print($user);
    return view('profile', ['user' => $user]);
 

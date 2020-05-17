@@ -5,7 +5,6 @@
     <div class="row justify-content-center">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <dashboard-component class="col-md-12" user="{{Auth::id()}}" token="{{csrf_token()}}"></dashboard-component>
-        @csrf
     </div>
 </div>
 @endsection

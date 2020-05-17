@@ -2352,6 +2352,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 //
@@ -2408,19 +2410,60 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["user"],
+  props: ["userid", "userdetails"],
+  data: function data() {
+    return {
+      stocks: null
+    };
+  },
   computed: {
     getObject: function getObject() {
-      var dummy = JSON.parse(this.user.substring(this.user.indexOf("{"), this.user.lastIndexOf("}") + 1));
+      var dummy = JSON.parse(this.userdetails.substring(this.userdetails.indexOf("{"), this.userdetails.lastIndexOf("}") + 1));
       console.log(dummy, _typeof(dummy));
       return dummy;
+    },
+    getStocks: function getStocks() {
+      var _this = this;
+
+      if (!this.stocks) {
+        console.log(this.userid);
+        var url = "/api/stocks/" + this.userid;
+        axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(url).then(function (response) {
+          console.log(response.data);
+          _this.stocks = response.data;
+        })["catch"](function (error) {
+          console.log("Error");
+        });
+      }
+
+      return this.stocks;
     }
   },
   methods: {
     capitalizeFirstLetter: function capitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
-    }
+    },
+    getStockData: function getStockData() {}
   },
   mounted: function mounted() {
     console.log("Component mounted.");
@@ -39469,7 +39512,49 @@ var render = function() {
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row justify-content-center" }, [
       _c("div", { staticClass: "col-md-8" }, [
-        _vm._m(0),
+        _c("nav", [
+          _c(
+            "div",
+            {
+              staticClass: "nav nav-tabs",
+              attrs: { id: "nav-tab", role: "tablist" }
+            },
+            [
+              _c(
+                "a",
+                {
+                  staticClass: "nav-item nav-link active",
+                  attrs: {
+                    id: "nav-profile-tab",
+                    "data-toggle": "tab",
+                    href: "#nav-profile",
+                    role: "tab",
+                    "aria-controls": "nav-profile",
+                    "aria-selected": "false"
+                  }
+                },
+                [_vm._v("Profile")]
+              ),
+              _vm._v(" "),
+              _c(
+                "a",
+                {
+                  staticClass: "nav-item nav-link",
+                  attrs: {
+                    id: "nav-stockexchange-tab",
+                    "data-toggle": "tab",
+                    href: "#nav-stockexchange",
+                    role: "tab",
+                    "aria-controls": "nav-stockexchange",
+                    "aria-selected": "false"
+                  },
+                  on: { click: _vm.getStockData }
+                },
+                [_vm._v("Stock Exchanges")]
+              )
+            ]
+          )
+        ]),
         _vm._v(" "),
         _c(
           "div",
@@ -39514,7 +39599,52 @@ var render = function() {
                   "aria-labelledby": "nav-stockexchange-tab"
                 }
               },
-              [_vm._v("...")]
+              [
+                _c("table", { staticClass: "table table-bordered" }, [
+                  _c("thead", [
+                    _c(
+                      "tr",
+                      [
+                        _c("th", [_vm._v("#")]),
+                        _vm._v(" "),
+                        _vm._l(_vm.getStocks[0], function(data, key) {
+                          return _c("th", { key: key }, [_vm._v(_vm._s(key))])
+                        }),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("total_money")])
+                      ],
+                      2
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.getStocks, function(data, key) {
+                      return _c(
+                        "tr",
+                        { key: key },
+                        [
+                          _c("td", [_vm._v(_vm._s(key + 1))]),
+                          _vm._v(" "),
+                          _vm._l(data, function(k, v) {
+                            return _c("td", { key: v.id }, [_vm._v(_vm._s(k))])
+                          }),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(
+                              _vm._s(
+                                data["quantity"] * data["purchasing_price"]
+                              )
+                            )
+                          ])
+                        ],
+                        2
+                      )
+                    }),
+                    0
+                  )
+                ])
+              ]
             )
           ]
         )
@@ -39522,55 +39652,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("nav", [
-      _c(
-        "div",
-        {
-          staticClass: "nav nav-tabs",
-          attrs: { id: "nav-tab", role: "tablist" }
-        },
-        [
-          _c(
-            "a",
-            {
-              staticClass: "nav-item nav-link active",
-              attrs: {
-                id: "nav-profile-tab",
-                "data-toggle": "tab",
-                href: "#nav-profile",
-                role: "tab",
-                "aria-controls": "nav-profile",
-                "aria-selected": "false"
-              }
-            },
-            [_vm._v("Profile")]
-          ),
-          _vm._v(" "),
-          _c(
-            "a",
-            {
-              staticClass: "nav-item nav-link",
-              attrs: {
-                id: "nav-stockexchange-tab",
-                "data-toggle": "tab",
-                href: "#nav-stockexchange",
-                role: "tab",
-                "aria-controls": "nav-stockexchange",
-                "aria-selected": "false"
-              }
-            },
-            [_vm._v("Stock Exchanges")]
-          )
-        ]
-      )
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

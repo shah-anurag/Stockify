@@ -67,6 +67,9 @@ class HomeController extends Controller
                 'purchase_date' => $date
             ]);
         }
+        else {
+            return response('', 401);
+        }
     }
 
     private function buy(Request $request) {
